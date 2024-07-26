@@ -162,10 +162,11 @@ void saveIntrinsic(const std::string& name, IndexT intrinsicId, const std::share
     if (intrinsicScaleOffset)
     {
         const double initialFocalLengthMM =
-          (intrinsicScaleOffset->getInitialScale().x() > 0)
-            ? intrinsicScaleOffset->sensorWidth() * intrinsicScaleOffset->getInitialScale().x() / double(intrinsic->w())
+          (intrinsicScaleOffset->getInitialScale().y() > 0)
+            ? intrinsicScaleOffset->sensorWidth() * intrinsicScaleOffset->getInitialScale().y() / double(intrinsic->w())
             : -1;
-        const double focalLengthMM = intrinsicScaleOffset->sensorWidth() * intrinsicScaleOffset->getScale().x() / double(intrinsic->w());
+        const double focalLengthMM = intrinsicScaleOffset->sensorWidth() * intrinsicScaleOffset->getScale().y() / double(intrinsic->w());
+
         const double focalRatio = intrinsicScaleOffset->getScale().x() / intrinsicScaleOffset->getScale().y();
         const double pixelRatio = 1.0 / focalRatio;
         
@@ -312,9 +313,11 @@ void loadIntrinsic(const Version& version, IndexT& intrinsicId, std::shared_ptr<
         const double fmm = intrinsicTree.get<double>("focalLength", 1.0);
         const double pixelAspectRatio = intrinsicTree.get<double>("pixelRatio", 1.0);
 
+        
+
         const double focalRatio = 1.0 / pixelAspectRatio;
-        const double fx = (fmm / sensorWidth) * double(width);
-        const double fy = fx / focalRatio;
+        const double fy = (fmm / sensorWidth) * double(width);
+        const double fx = (fy * focalRatio);
 
         pxFocalLength(0) = fx;
         pxFocalLength(1) = fy;
@@ -353,8 +356,8 @@ void loadIntrinsic(const Version& version, IndexT& intrinsicId, std::shared_ptr<
             double initialFocalLengthMM = intrinsicTree.get<double>("initialFocalLength");
 
             Vec2 initialFocalLengthPx;
-            initialFocalLengthPx(0) = (initialFocalLengthMM / sensorWidth) * double(width);
-            initialFocalLengthPx(1) = (initialFocalLengthPx(0) > 0) ? initialFocalLengthPx(0) * pxFocalLength(1) / pxFocalLength(0) : -1;
+            initialFocalLengthPx(1) = (initialFocalLengthMM / sensorWidth) * double(width);
+            initialFocalLengthPx(0) = (initialFocalLengthPx(1) > 0) ? initialFocalLengthPx(1) * pxFocalLength(0) / pxFocalLength(1) : -1;
 
             intrinsicWithScale->setInitialScale(initialFocalLengthPx);
             intrinsicWithScale->setRatioLocked(intrinsicTree.get<bool>("pixelRatioLocked"));

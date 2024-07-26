@@ -194,8 +194,8 @@ void AlembicExporter::DataImpl::addCamera(const std::string& name,
         const float sensorWidth_pix = std::max(imgWidth, imgHeight);
         const float focalLengthX_pix = static_cast<const float>(scale(0));
         const float focalLengthY_pix = static_cast<const float>(scale(1));
-        const float focalLength_mm = sensorWidth * focalLengthX_pix / sensorWidth_pix;
-        const float shiftX_mm = sensorWidth * focalLengthX_pix / sensorWidth_pix;
+        const float focalLength_mm = sensorWidth * focalLengthY_pix / sensorWidth_pix;
+        const float shiftX_mm = sensorWidth * focalLengthY_pix / sensorWidth_pix;
         const float squeeze = focalLengthX_pix / focalLengthY_pix;
         const float pix2mm = sensorWidth / sensorWidth_pix;
 
@@ -219,7 +219,7 @@ void AlembicExporter::DataImpl::addCamera(const std::string& name,
         std::vector<double> sensorSize_mm = {sensorWidth, sensorHeight};
 
         double initialFocalLength =
-          (intrinsicCasted->getInitialScale().x() > 0) ? (intrinsicCasted->getInitialScale().x() * sensorWidth / double(intrinsicCasted->w())) : -1;
+          (intrinsicCasted->getInitialScale().y() > 0) ? (intrinsicCasted->getInitialScale().y() * sensorWidth / double(intrinsicCasted->w())) : -1;
 
         OUInt32ArrayProperty(userProps, "mvg_sensorSizePix").set(sensorSize_pix);
         ODoubleArrayProperty(userProps, "mvg_sensorSizeMm").set(sensorSize_mm);
@@ -700,7 +700,7 @@ void AlembicExporter::addCameraKeyframe(const geometry::Pose3& pose,
     const float sensorWidth_pix = std::max(imgWidth, imgHeight);
     const float focalLengthX_pix = static_cast<const float>(scale(0));
     const float focalLengthY_pix = static_cast<const float>(scale(1));
-    const float focalLength_mm = sensorWidth * focalLengthX_pix / sensorWidth_pix;
+    const float focalLength_mm = sensorWidth * focalLengthY_pix / sensorWidth_pix;
     const float squeeze = focalLengthX_pix / focalLengthY_pix;
     const float pix2mm = sensorWidth / sensorWidth_pix;
     

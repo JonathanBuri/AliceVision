@@ -538,7 +538,7 @@ bool readCamera(const Version& abcVersion,
             }
             if (const Alembic::Abc::PropertyHeader* propHeader = userProps.getPropertyHeader("mvg_initialFocalLength"))
             {
-                initialFocalLengthPix(0) = (sensorSize_pix.at(0) / sensorSize_mm[0]) *
+                initialFocalLengthPix(1) = (sensorSize_pix.at(0) / sensorSize_mm[0]) *
                                            getAbcProp<Alembic::Abc::IDoubleProperty>(userProps, *propHeader, "mvg_initialFocalLength", sampleFrame);
             }
             if (const Alembic::Abc::PropertyHeader* propHeader = userProps.getPropertyHeader("mvg_fisheyeCircleCenterX"))
@@ -652,8 +652,8 @@ bool readCamera(const Version& abcVersion,
         if (intrinsicCasted)
         {
             // fy_pix = fx_pix * fy/fx
-            initialFocalLengthPix(1) =
-              (initialFocalLengthPix(0) > 0) ? initialFocalLengthPix(0) * mvg_intrinsicParams[1] / mvg_intrinsicParams[0] : -1;
+            initialFocalLengthPix(0) =
+              (initialFocalLengthPix(1) > 0) ? initialFocalLengthPix(1) * mvg_intrinsicParams[0] / mvg_intrinsicParams[1] : -1;
             intrinsicCasted->setInitialScale(initialFocalLengthPix);
             intrinsicCasted->setRatioLocked(lockRatio);
 

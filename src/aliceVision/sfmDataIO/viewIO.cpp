@@ -269,8 +269,11 @@ std::shared_ptr<camera::IntrinsicBase> getViewIntrinsic(const sfmData::View& vie
         if (intrinsicScaleOffset)
         {
             intrinsicScaleOffset->setInitialScale({horizontalScale, verticalScale});
+
+            std::cout << intrinsicScaleOffset->getScale() << std::endl;
         }
     }
+    
 
     //In any case, we can fill the default offset
     {
